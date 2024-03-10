@@ -71,10 +71,25 @@ const deleteUser = async (req: Request, res: Response) => {
   }
 };
 
+const insertOrUpdate = async (req: Request, res: Response) => {
+  try {
+    const result = await UserService.insertOrUpdate(req.body);
+
+    res.send({
+      success: true,
+      message: "profile create or update successfully!",
+      data: result,
+    });
+  } catch (error) {
+    res.send(error);
+  }
+};
+
 export const UserController = {
   insertIntoDB,
   getAllData,
   getSingleData,
   updateUser,
   deleteUser,
+  insertOrUpdate,
 };

@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { Profile, User } from "@prisma/client";
 import prisma from "../../Shared/Prisma";
 
 const insertIntoDB = async (data: User): Promise<User> => {
@@ -37,10 +37,35 @@ const deleteUser = async (id: string) => {
   return result;
 };
 
+const insertOrUpdate = async (data: Profile) => {
+  const isExist = await prisma.profile.findFirst({
+    where: {
+      userId: data.userId,
+    },
+  });
+
+  if (isExist) {
+    const result = await prisma.profile.update({
+      where: {
+        id: isExist.id,
+      },
+      data: {
+        bio: data.bio,
+        name: data.name,
+      },
+    });
+    return result;
+  }
+
+  const result = await prisma.profile.create({ data });
+  return result;
+};
+
 export const UserService = {
   insertIntoDB,
   getAllData,
   getSingleData,
   updateUser,
   deleteUser,
+  insertOrUpdate,
 };
