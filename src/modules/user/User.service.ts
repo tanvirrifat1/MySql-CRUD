@@ -7,7 +7,9 @@ const insertIntoDB = async (data: User): Promise<User> => {
 };
 
 const getAllData = async () => {
-  const result = await prisma.user.findMany();
+  const result = await prisma.user.findMany({
+    include: { profile: true },
+  });
   const count = await prisma.user.count();
   return {
     result,
@@ -18,6 +20,9 @@ const getAllData = async () => {
 const getSingleData = async (id: string) => {
   const result = await prisma.user.findUnique({
     where: { id },
+    include: {
+      profile: true,
+    },
   });
   return result;
 };
